@@ -50,4 +50,38 @@ export class AuthService {
     
     return {token:token};
   }
+
+  async verifyToken(token: string) {
+    try {
+      // Verificar y decodificar el token
+      const payload = jwt.verify(token, process.env.JWT_SECRET) as { userId: number };
+      
+      // Buscar el usuario en la base de datos
+      const user = await this.userRepository.findOne({ 
+        where: { id: payload.userId },
+        relations: ['roles', 'roles.accesses']
+      });
+
+      if (!user) {
+        throw new UnauthorizedException('Usuario no encontrado');
+      }
+
+      // Devolver información del usuario (sin contraseña)
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        roles: user.roles?.map(role => ({
+          id: role.id,
+          name: role.name,
+          accesses: role.accesses?.map(access => ({
+            id: access.id,
+            name: access.name
+          }))
+        })) || []
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Token inválido o expirado');
+    }
+  }
 }

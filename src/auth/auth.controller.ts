@@ -2,13 +2,14 @@ import { Body, Controller, Post, Res, HttpStatus, Get } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto.login';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';  
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiOperation({ summary: 'Iniciar sesión' })
   @ApiBody({ type: LoginDto })
   async create(@Body() loginDto: LoginDto, @Res() res: Response) {
     console.log("controller:", loginDto);
@@ -40,7 +41,39 @@ export class AuthController {
     }
   }
 
+  @Get('check')
+  @ApiOperation({ summary: 'Verificar autenticación del usuario' })
+  async checkAuth(@Res() res: Response) {
+    try {
+      // Obtener el token de la cookie
+      const token = res.req.cookies?.token;
+      
+      if (!token) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({
+          success: false,
+          message: 'No hay token de autenticación'
+        });
+      }
+
+      // Verificar el token
+      const userData = await this.authService.verifyToken(token);
+      
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Token válido',
+        user: userData
+      });
+      
+    } catch (error) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        success: false,
+        message: 'Token inválido o expirado'
+      });
+    }
+  }
+
   @Get('logout')
+  @ApiOperation({ summary: 'Cerrar sesión' })
   async logout(@Res() res: Response) {
     // Eliminar la cookie
     res.clearCookie('token', {
