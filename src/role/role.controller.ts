@@ -7,6 +7,10 @@ import { AccessCreateDto } from './access/access.create.dto';
 import { RequireAccess } from '../role/access/access.decorator';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
+import { RoleOneResponseDto } from './dto/role.one.response.dto';
+import { AccessAllResponseDto } from './access/access.all.response.dto';
+import { AccessGuard } from 'src/role/access/access.guard';
+
 
 @ApiTags('Role')
 @Controller('role')
@@ -31,9 +35,33 @@ export class RoleController {
     @Get(':id')
     @UseGuards(JwtGuard)
     @RequireAccess('role:read')
-    @ApiOperation({ summary: 'Obtener un rol por su id' })
-    async findById(@Param('id') id: string){
+    @ApiOperation({ 
+        summary: 'Obtener un rol por su id',
+        description: 'Obtiene un rol específico con todos sus accesos asociados'
+    })
+    @ApiResponse({ 
+        status: 200, 
+        description: 'Rol obtenido exitosamente',
+        type: RoleOneResponseDto,
+    })
+    async findById(@Param('id') id: string): Promise<RoleOneResponseDto>{
         return this.roleService.findById(id);
+    }
+
+    //obtener todos los accesos
+    @Get('access')
+    @UseGuards(JwtGuard, AccessGuard)
+    @RequireAccess('role:read')
+    @ApiOperation({ summary: 'Obtener todos los accesos' })
+    @ApiResponse({ 
+        status: 200, 
+        description: 'Lista de accesos obtenida exitosamente',
+        type: [AccessAllResponseDto]
+    })
+    async findAllAccesses(): Promise<AccessAllResponseDto[]>{
+
+        console.log("findAllAccesses");
+        return this.roleService.findAllAccesses();
     }
 
     //crear acceso a un rol

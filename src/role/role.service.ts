@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { AccessCreateDto } from './access/access.create.dto';
 import { User } from 'src/user/user.entity';
 import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
+import { RoleOneResponseDto , AccessResponseDto} from './dto/role.one.response.dto';
+import { AccessAllResponseDto } from './access/access.all.response.dto';
 
 @Injectable()
 export class RoleService {
@@ -26,7 +28,7 @@ export class RoleService {
         return roles;
     }
 
-    async findById(id: string) {
+    async findById(id: string): Promise<RoleOneResponseDto> {
 
         // Verificar si el id es un número
         if (isNaN(parseInt(id))) {
@@ -34,11 +36,30 @@ export class RoleService {
         }
 
         // Verificar si el rol existe
-        const role = await this.roleRepository.findOne({ where: { id: parseInt(id) } });
+        const role = await this.roleRepository.findOne({ where: { id: parseInt(id) }, relations: ['accesses'] });
         if (!role) {
             throw new NotFoundException('Role not found');
         }
-        return role;
+        const roleResponse: RoleOneResponseDto = {
+            id: role.id,
+            name: role.name,
+            accesses: role.accesses.map((access): AccessResponseDto => ({
+                id: access.id,
+                name: access.name
+            }))
+        };
+        return roleResponse;
+    }
+
+    async findAllAccesses(): Promise<AccessAllResponseDto[]> {
+
+        const accesses = await this.accessRepository.find();
+
+        const accessResponse: AccessAllResponseDto[] = accesses.map((access): AccessAllResponseDto => ({
+            id: access.id,
+            name: access.name
+        }));
+        return accessResponse;
     }
 
     async createAccess(id: string, access: AccessCreateDto) {
