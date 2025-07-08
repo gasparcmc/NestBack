@@ -5,7 +5,8 @@ import { Get, UseGuards, Post, Body, Delete, Put } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/jwt/jwt.guard';
 import { AccessCreateDto } from './access/access.create.dto';
 import { RequireAccess } from '../role/access/access.decorator';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 
 @ApiTags('Role')
 @Controller('role')
@@ -17,7 +18,12 @@ export class RoleController {
     @Get()
     @UseGuards(JwtGuard)
     @ApiOperation({ summary: 'Obtener todos los roles' })
-    async findAll(){
+    @ApiResponse({ 
+        status: 200, 
+        description: 'Lista de roles obtenida exitosamente',
+        type: [RoleFindAllResponseDto]
+    })
+    async findAll(): Promise<RoleFindAllResponseDto[]>{
         return this.roleService.findAll();
     }
 

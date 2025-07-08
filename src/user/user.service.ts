@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserResponseDto } from './dto/user.response.dto';
 import { UserRegisterDto } from './dto/user.register.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { NotFoundException, BadRequestException, Injectable } from '@nestjs/common';
 import { Role } from 'src/role/role.entity';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -49,8 +49,8 @@ export class UserService {
 
       // Crear un usuario
       async createUser(user: UserRegisterDto) {
-
-        // Verificar si el usuario ya existe
+        try {
+        // Verificar si el email ya existe
         const userExists = await this.userRepository.findOne({ where: { email: user.email } });
         if (userExists) {
           throw new BadRequestException('Email already exists');
@@ -65,11 +65,19 @@ export class UserService {
         const UserFormat = new User();
         UserFormat.username = user.username;
         UserFormat.email = user.email;
-        UserFormat.password = user.password;
+
+        // Encriptar la contraseña
+        UserFormat.password = await argon2.hash(user.password);
+
         UserFormat.createdAt = new Date();
         UserFormat.updatedAt = new Date();
         const userNew = await this.userRepository.save(UserFormat);
         return "User created successfully";
+
+        } catch (error) {
+          console.log("error", error);
+          throw new BadRequestException('Error creating user');
+        }
       }
 
       // Actualizar un usuario

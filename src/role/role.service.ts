@@ -7,6 +7,7 @@ import { Role } from './role.entity';
 import { Repository } from 'typeorm';
 import { AccessCreateDto } from './access/access.create.dto';
 import { User } from 'src/user/user.entity';
+import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 
 @Injectable()
 export class RoleService {
@@ -20,7 +21,7 @@ export class RoleService {
         private userRepository: Repository<User>,
     ) {}
 
-    async findAll() {
+    async findAll(): Promise<RoleFindAllResponseDto[]> {
         const roles = await this.roleRepository.find({relations: ['accesses']});
         return roles;
     }

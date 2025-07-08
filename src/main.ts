@@ -25,8 +25,6 @@ async function bootstrap() {
   //  credentials: true, // ⬅️ necesario para permitir cookies
   //});
 
-  app.use(cookieParser());
-
   if (process.env.NODE_ENV === 'test') {
   // Configuración de Swagger
   const config = new DocumentBuilder()
