@@ -14,4 +14,19 @@ export class AccessAllResponseDto {
         type: String
     })
     name: string;
+
+
+    @ApiProperty({ 
+        description: 'Orden del acceso',
+        example: 1,
+        type: Number
+    })
+    order: number;
+
+    @ApiProperty({ 
+        description: 'ID del acceso padre',
+        example: 1,
+        type: Number
+    })
+    dad: number;
 }   

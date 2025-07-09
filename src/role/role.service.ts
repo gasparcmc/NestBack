@@ -58,7 +58,9 @@ export class RoleService {
         
         const accessResponse: AccessAllResponseDto[] = accesses.map((access): AccessAllResponseDto => ({
             id: access.id,
-            name: access.name
+            name: access.name,
+            order: access.order,
+            dad: access.dad
         }));
         return accessResponse;
     }
