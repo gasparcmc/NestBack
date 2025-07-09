@@ -10,6 +10,7 @@ import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 import { RoleOneResponseDto } from './dto/role.one.response.dto';
 import { AccessAllResponseDto } from './access/access.all.response.dto';
 import { AccessGuard } from 'src/role/access/access.guard';
+import { RoleUpdateDto } from './dto/role.update.dto';
 
 
 @ApiTags('Role')
@@ -63,6 +64,22 @@ export class RoleController {
         console.log("findAllAccesses");
         return this.roleService.findAllAccesses();
     }
+    
+
+    //crear rol
+    @Post()
+    @UseGuards(JwtGuard)
+    @RequireAccess('role:create')
+    @ApiOperation({ summary: 'Crear un rol' })
+    @ApiResponse({ 
+        status: 200, 
+        description: 'Rol creado exitosamente',
+        type: String
+    })
+    async createRole(@Body() role: RoleUpdateDto){
+        return this.roleService.createRole(role);
+    }
+    
 
     //crear acceso a un rol
     @Post(':id/access')

@@ -10,6 +10,7 @@ import { User } from 'src/user/user.entity';
 import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 import { RoleOneResponseDto , AccessResponseDto} from './dto/role.one.response.dto';
 import { AccessAllResponseDto } from './access/access.all.response.dto';
+import { RoleUpdateDto } from './dto/role.update.dto';
 
 @Injectable()
 export class RoleService {
@@ -60,6 +61,26 @@ export class RoleService {
             name: access.name
         }));
         return accessResponse;
+    }
+
+
+    async createRole(role: RoleUpdateDto) {
+        try {
+
+            // Verificar si el rol ya existe
+            const roleExists = await this.roleRepository.findOne({ where: { name: role.name } });
+            if (roleExists) {
+                throw new BadRequestException('Role already exists');
+            }
+
+            const newRole = await this.roleRepository.save(role);
+
+            return "Role created successfully";
+
+        } catch (error) {
+            console.log("error", error);
+            throw new BadRequestException('Error creating role');
+        }
     }
 
     async createAccess(id: string, access: AccessCreateDto) {
