@@ -32,6 +32,23 @@ export class RoleController {
         return this.roleService.findAll();
     }
 
+
+    //obtener todos los accesos   
+    @Get('access')
+    @UseGuards(JwtGuard, AccessGuard)
+    @RequireAccess('role:read')
+    @ApiOperation({ summary: 'Obtener todos los accesos' })
+    @ApiResponse({ 
+        status: 200, 
+        description: 'Lista de accesos obtenida exitosamente',
+        type: [AccessAllResponseDto]
+    })
+    async findAllAccesses(): Promise<AccessAllResponseDto[]>{
+
+        console.log("findAllAccesses");
+        return this.roleService.findAllAccesses();
+    }
+    
     // Obtener un rol por su id
     @Get(':id')
     @UseGuards(JwtGuard)
@@ -49,26 +66,11 @@ export class RoleController {
         return this.roleService.findById(id);
     }
 
-    //obtener todos los accesos
-    @Get('access')
-    @UseGuards(JwtGuard, AccessGuard)
-    @RequireAccess('role:read')
-    @ApiOperation({ summary: 'Obtener todos los accesos' })
-    @ApiResponse({ 
-        status: 200, 
-        description: 'Lista de accesos obtenida exitosamente',
-        type: [AccessAllResponseDto]
-    })
-    async findAllAccesses(): Promise<AccessAllResponseDto[]>{
 
-        console.log("findAllAccesses");
-        return this.roleService.findAllAccesses();
-    }
-    
 
     //crear rol
     @Post()
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, AccessGuard)
     @RequireAccess('role:create')
     @ApiOperation({ summary: 'Crear un rol' })
     @ApiResponse({ 

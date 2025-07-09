@@ -55,7 +55,7 @@ export class RoleService {
     async findAllAccesses(): Promise<AccessAllResponseDto[]> {
 
         const accesses = await this.accessRepository.find();
-
+        console.log("accesses", accesses);
         const accessResponse: AccessAllResponseDto[] = accesses.map((access): AccessAllResponseDto => ({
             id: access.id,
             name: access.name
