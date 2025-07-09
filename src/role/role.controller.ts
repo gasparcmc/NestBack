@@ -82,6 +82,14 @@ export class RoleController {
         return this.roleService.createRole(role);
     }
     
+    //actualizar rol
+    @Put(':id')
+    @UseGuards(JwtGuard)
+    @RequireAccess('role:update')
+    @ApiOperation({ summary: 'Actualizar un rol' })
+    async updateRole(@Param('id') id: string, @Body() role: RoleUpdateDto){
+        return this.roleService.updateRole(id, role);
+    }
 
     //crear acceso a un rol
     @Post(':id/access')

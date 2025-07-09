@@ -55,7 +55,7 @@ export class RoleService {
     async findAllAccesses(): Promise<AccessAllResponseDto[]> {
 
         const accesses = await this.accessRepository.find();
-        console.log("accesses", accesses);
+        
         const accessResponse: AccessAllResponseDto[] = accesses.map((access): AccessAllResponseDto => ({
             id: access.id,
             name: access.name
@@ -80,6 +80,25 @@ export class RoleService {
         } catch (error) {
             console.log("error", error);
             throw new BadRequestException('Error creating role');
+        }
+    }
+
+    async updateRole(id: string, role: RoleUpdateDto) {
+        try {
+            // Verificar si el rol existe
+            const roleExists = await this.roleRepository.findOne({ where: { id: parseInt(id) } });
+            if (!roleExists) {
+                throw new NotFoundException('Role not found');
+            }
+
+            // Actualizar el rol
+            roleExists.name = role.name;
+            await this.roleRepository.save(roleExists);
+
+            return "Role updated successfully";
+        } catch (error) {
+            console.log("error", error);
+            throw new BadRequestException('Error updating role');
         }
     }
 
