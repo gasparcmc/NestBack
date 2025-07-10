@@ -11,6 +11,7 @@ import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 import { RoleOneResponseDto , AccessResponseDto} from './dto/role.one.response.dto';
 import { AccessAllResponseDto } from './access/access.all.response.dto';
 import { RoleUpdateDto } from './dto/role.update.dto';
+import { access } from 'fs';
 
 @Injectable()
 export class RoleService {
@@ -88,13 +89,28 @@ export class RoleService {
     async updateRole(id: string, role: RoleUpdateDto) {
         try {
             // Verificar si el rol existe
-            const roleExists = await this.roleRepository.findOne({ where: { id: parseInt(id) } });
+            const roleExists = await this.roleRepository.findOne({ 
+                where: { id: parseInt(id) }, 
+                relations: ['accesses'] 
+            });
             if (!roleExists) {
                 throw new NotFoundException('Role not found');
             }
 
-            // Actualizar el rol
+            // Actualizar el nombre del rol
             roleExists.name = role.name;
+
+            // Si se proporcionan accesos, actualizar la relación
+            if (role.accesses && role.accesses.length > 0) {
+                // Buscar los accesos por sus IDs
+                const accessIds = role.accesses.map(access => access.id);
+                console.log("accessIds", accessIds);
+                const accesses = await this.accessRepository.findByIds(accessIds);
+                
+                // Actualizar la relación
+                roleExists.accesses = accesses;
+            }
+
             await this.roleRepository.save(roleExists);
 
             return "Role updated successfully";
