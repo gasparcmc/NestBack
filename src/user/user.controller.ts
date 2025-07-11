@@ -6,7 +6,9 @@ import { AccessGuard } from 'src/role/access/access.guard';
 import { RequireAccess } from 'src/role/access/access.decorator';
 import { UserRegisterDto } from './dto/user.register.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { UserResponseDto } from './dto/user.response.dto';
+
 
 @ApiTags('User')
 @Controller('user')
@@ -17,6 +19,7 @@ export class UserController {
   @UseGuards(JwtGuard, AccessGuard)
   @RequireAccess('user:readAll')
   @ApiOperation({ summary: 'Obtener todos los usuarios' })
+  @ApiResponse({ status: 200, description: 'Usuarios obtenidos correctamente', type: [UserResponseDto] })
   getAllUsers() {
     return this.userService.findAll();
   }

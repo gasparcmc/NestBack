@@ -20,11 +20,14 @@ export class UserService {
       // Obtener todos los usuarios
       async findAll(): Promise<UserResponseDto[]> {
         const users = await this.userRepository.find();
-        return users.map(user => ({
+
+        // Retornar el usuario en formato UserResponseDto
+        const UserResponse : UserResponseDto[] = users.map(user => ({
           id: user.id,
           username: user.username,
           email: user.email,
         }));
+        return UserResponse;
       }
 
       // Obtener un usuario por su id
@@ -40,6 +43,7 @@ export class UserService {
         if (!user) {
           throw new NotFoundException('User not found');
         }
+        
         return {
           id: user.id,
           username: user.username,
