@@ -1,6 +1,7 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Get , UseGuards, Param, Post, Body, Put, Delete} from '@nestjs/common';
+import { CurrentUser } from './decorators/user.decorator';
 import { JwtGuard } from 'src/auth/jwt/jwt.guard';
 import { AccessGuard } from 'src/role/access/access.guard';
 import { RequireAccess } from 'src/role/access/access.decorator';
@@ -23,6 +24,13 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Usuarios obtenidos correctamente', type: [UserResponseDto] })
   getAllUsers() {
     return this.userService.findAll();
+  }
+
+  @Get('/menu')
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Obtener el menu del usuario logueado' })
+  getMenuByUser(@CurrentUser() user) {
+    return this.userService.getMenuByUser(user.userId);
   }
 
   @Get(':id')
@@ -81,4 +89,6 @@ export class UserController {
   deleteRoleFromUser(@Param('id') id: string, @Param('roleId') roleId: string) {
     return this.userService.deleteRoleFromUser(id, roleId);
   }
+
+
 }
