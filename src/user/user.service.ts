@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserResponseDto } from './dto/user.response.dto';
 import { UserRegisterDto } from './dto/user.register.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
+import { UserOneResponseDto } from './dto/user.one.response.dto';
 import { NotFoundException, BadRequestException, Injectable } from '@nestjs/common';
 import { Role } from 'src/role/role.entity';
 import * as argon2 from 'argon2';
@@ -31,7 +32,7 @@ export class UserService {
       }
 
       // Obtener un usuario por su id
-      async findById(id: string): Promise<UserResponseDto> {
+      async findById(id: string): Promise<UserOneResponseDto> {
 
         // Verificar si el id es un número
         if (isNaN(parseInt(id))) {
@@ -43,12 +44,17 @@ export class UserService {
         if (!user) {
           throw new NotFoundException('User not found');
         }
+
+        const roles = await this.roleRepository.find({ where: { users: { id: parseInt(id) } } });
         
-        return {
+        const UserOneResponse : UserOneResponseDto = {
           id: user.id,
           username: user.username,
           email: user.email,
+          roles: roles.map(role => ({id: role.id, description: role.name})),
         };
+
+        return UserOneResponse;
       }
 
       // Crear un usuario
@@ -91,10 +97,21 @@ export class UserService {
         if (!userExists) {
           throw new NotFoundException('User not found');
         }
+
+
+        const roles = await Promise.all(
+          user.roles.map(role => this.roleRepository.findOne({ where: { id: role.id } }))
+        );
+        
         userExists.username = user.username;
         userExists.email = user.email;
         userExists.updatedAt = new Date();
+        userExists.roles = roles.filter(r => r) as Role[];
+      
         await this.userRepository.save(userExists);
+        
+
+
         return "User updated successfully";
         } catch (error) {
           console.log("error", error);

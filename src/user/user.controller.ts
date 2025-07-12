@@ -8,6 +8,7 @@ import { UserRegisterDto } from './dto/user.register.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user.response.dto';
+import { UserOneResponseDto } from './dto/user.one.response.dto';
 
 
 @ApiTags('User')
@@ -28,6 +29,7 @@ export class UserController {
   @UseGuards(JwtGuard, AccessGuard)
   @RequireAccess('user:readOne')
   @ApiOperation({ summary: 'Obtener un usuario por su id' })
+  @ApiResponse({ status: 200, description: 'Usuario obtenido correctamente', type: UserOneResponseDto })
   getUserById(@Param('id') id: string) {
     return this.userService.findById(id);
   }

@@ -1,6 +1,6 @@
 // user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, MaxLength, IsArray } from 'class-validator';
 
 export class UserUpdateDto {
     // El nombre de usuario
@@ -25,5 +25,14 @@ export class UserUpdateDto {
       @MinLength(6)
       @MaxLength(32)
     email: string;
+
+
+    @ApiProperty({
+        description: 'Los roles del usuario',
+        example: [{id: 1}, {id: 2}],
+      })
+      @IsArray()
+      @IsNotEmpty()
+      roles: {id: number}[];
   }
   
