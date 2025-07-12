@@ -66,29 +66,6 @@ export class UserController {
     return this.userService.deleteUser(id);
   }
 
-  @Post(':id/role/:roleId')
-  @UseGuards(JwtGuard, AccessGuard)
-  @RequireAccess('user:assignRole')
-  @ApiOperation({ summary: 'Asignar un rol a un usuario' })
-  assignRoleToUser(@Param('id') id: string, @Param('roleId') roleId: string) {
-    return this.userService.assignRoleToUser(id, roleId);
-  }
-
-  @Get(':id/roles')
-  @UseGuards(JwtGuard, AccessGuard)
-  @RequireAccess('user:readRoles')
-  @ApiOperation({ summary: 'Obtener los roles de un usuario' })
-  getRolesByUser(@Param('id') id: string) {
-    return this.userService.getRolesByUser(id);
-  }
-
-  @Delete(':id/role/:roleId')
-  @UseGuards(JwtGuard, AccessGuard)
-  @RequireAccess('user:deleteRole')
-  @ApiOperation({ summary: 'Eliminar un rol de un usuario' })
-  deleteRoleFromUser(@Param('id') id: string, @Param('roleId') roleId: string) {
-    return this.userService.deleteRoleFromUser(id, roleId);
-  }
 
 
 }

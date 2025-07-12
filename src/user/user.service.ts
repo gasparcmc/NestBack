@@ -140,59 +140,6 @@ export class UserService {
 
   }
 
-  // Asignar un rol a un usuario
-  async assignRoleToUser(id: string, roleId: string) {
-    try {
-      const userExists = await this.userRepository.findOne({ where: { id: parseInt(id) } });
-      if (!userExists) {
-        throw new NotFoundException('User not found');
-      }
-      const roleExists = await this.roleRepository.findOne({ where: { id: parseInt(roleId) } });
-      if (!roleExists) {
-        throw new NotFoundException('Role not found');
-      }
-      userExists.roles.push(roleExists);
-      await this.userRepository.save(userExists);
-      return "Role assigned to user successfully";
-    } catch (error) {
-      console.log("error", error);
-      throw new BadRequestException('Error assigning role to user');
-    }
-  }
-
-  // Obtener los roles de un usuario
-  async getRolesByUser(id: string) {
-    try {
-      const userExists = await this.userRepository.findOne({ where: { id: parseInt(id) }, relations: ['roles'] });
-      if (!userExists) {
-        throw new NotFoundException('User not found');
-      }
-      return userExists.roles;
-    } catch (error) {
-      console.log("error", error);
-      throw new BadRequestException('Error getting roles by user');
-    }
-  }
-
-  // Eliminar un rol de un usuario
-  async deleteRoleFromUser(id: string, roleId: string) {
-    try {
-      const userExists = await this.userRepository.findOne({ where: { id: parseInt(id) }, relations: ['roles'] });
-      if (!userExists) {
-        throw new NotFoundException('User not found');
-      }
-      const roleExists = await this.roleRepository.findOne({ where: { id: parseInt(roleId) } });
-      if (!roleExists) {
-        throw new NotFoundException('Role not found');
-      }
-      userExists.roles = userExists.roles.filter(role => role.id !== parseInt(roleId));
-      await this.userRepository.save(userExists);
-      return "Role deleted from user successfully";
-    } catch (error) {
-      console.log("error", error);
-      throw new BadRequestException('Error deleting role from user');
-    }
-  }
 
   // Obtener el menu de un usuario
   async getMenuByUser(userId: number) {

@@ -90,14 +90,6 @@ export class RoleController {
         return this.roleService.updateRole(id, role);
     }
 
-    //obtener accesos de un rol
-    @Get(':id/access')
-    @UseGuards(JwtGuard, AccessGuard)
-    @RequireAccess('role:read')
-    @ApiOperation({ summary: 'Obtener accesos de un rol' })
-    async getAccessesByRole(@Param('id') id: string){
-        return this.roleService.getAccessesByRole(id);
-    }
 
     //eliminar rol
     @Delete(':id')

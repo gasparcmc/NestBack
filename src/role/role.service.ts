@@ -121,20 +121,6 @@ export class RoleService {
     }
 
 
-    async getAccessesByRole(id: string) {
-        try {
-        // Verificar si el rol existe
-        const role = await this.roleRepository.findOne({ where: { id: parseInt(id) },relations: ['accesses'] });
-        if (!role) {
-            throw new NotFoundException('Role not found');
-        }
-        return role.accesses;
-        } catch (error) {
-            console.log("error", error);
-            throw new BadRequestException('Error getting accesses by role');
-        }
-    }
-
     async deleteRole(id: string) {
         try {
             // Verificar si el rol existe
