@@ -75,6 +75,13 @@ export class UserService {
       }
 
       const UserFormat = new User();
+
+      const roles = await Promise.all(
+        user.roles.map(role => this.roleRepository.findOne({ where: { id: role.id } }))
+      );
+      
+      UserFormat.roles = roles.filter(r => r) as Role[];
+
       UserFormat.username = user.username;
       UserFormat.email = user.email;
 
@@ -83,7 +90,11 @@ export class UserService {
 
       UserFormat.createdAt = new Date();
       UserFormat.updatedAt = new Date();
+
+      console.log("UserFormat", UserFormat);
+
       const userNew = await this.userRepository.save(UserFormat);
+
       return "User created successfully";
 
     } catch (error) {

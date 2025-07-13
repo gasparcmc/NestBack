@@ -47,6 +47,7 @@ export class UserController {
   @RequireAccess('user:create')
   @ApiOperation({ summary: 'Crear un usuario' })
   createUser(@Body() user: UserRegisterDto) {
+    console.log("user", user);
     return this.userService.createUser(user);
   }
 
