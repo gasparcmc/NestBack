@@ -21,7 +21,7 @@ export class UserController {
   @UseGuards(JwtGuard, AccessGuard)
   @RequireAccess('user:readAll')
   @ApiOperation({ summary: 'Obtener todos los usuarios' })
-  @ApiResponse({ status: 200, description: 'Usuarios obtenidos correctamente', type: [UserResponseDto] })
+  @ApiResponse({ status: 200, description: 'Usuarios obtenidos correctamente' })
   getAllUsers() {
     return this.userService.findAll();
   }
@@ -37,7 +37,7 @@ export class UserController {
   @UseGuards(JwtGuard, AccessGuard)
   @RequireAccess('user:readOne')
   @ApiOperation({ summary: 'Obtener un usuario por su id' })
-  @ApiResponse({ status: 200, description: 'Usuario obtenido correctamente', type: UserOneResponseDto })
+  @ApiResponse({ status: 200, description: 'Usuario obtenido correctamente'})
   getUserById(@Param('id') id: string) {
     return this.userService.findById(id);
   }

@@ -22,11 +22,7 @@ export class RoleController {
     @UseGuards(JwtGuard, AccessGuard)
     @RequireAccess('role:readAll')
     @ApiOperation({ summary: 'Obtener todos los roles' })
-    @ApiResponse({ 
-        status: 200, 
-        description: 'Lista de roles obtenida exitosamente',
-        type: [RoleFindAllResponseDto]
-    })
+    @ApiResponse({status: 200,description: 'Lista de roles obtenida exitosamente'})
     async findAll(): Promise<RoleFindAllResponseDto[]>{
         return this.roleService.findAll();
     }
@@ -37,14 +33,8 @@ export class RoleController {
     @UseGuards(JwtGuard, AccessGuard)
     @RequireAccess('role:read')
     @ApiOperation({ summary: 'Obtener todos los accesos' })
-    @ApiResponse({ 
-        status: 200, 
-        description: 'Lista de accesos obtenida exitosamente',
-        type: [AccessAllResponseDto]
-    })
+    @ApiResponse({ status: 200,description: 'Lista de accesos obtenida exitosamente'})
     async findAllAccesses(): Promise<AccessAllResponseDto[]>{
-
-        console.log("findAllAccesses");
         return this.roleService.findAllAccesses();
     }
     
@@ -52,15 +42,8 @@ export class RoleController {
     @Get(':id')
     @UseGuards(JwtGuard, AccessGuard)
     @RequireAccess('role:read')
-    @ApiOperation({ 
-        summary: 'Obtener un rol por su id',
-        description: 'Obtiene un rol específico con todos sus accesos asociados'
-    })
-    @ApiResponse({ 
-        status: 200, 
-        description: 'Rol obtenido exitosamente',
-        type: RoleOneResponseDto,
-    })
+    @ApiOperation({summary: 'Obtener un rol por su id',description: 'Obtiene un rol específico con todos sus accesos asociados'})
+    @ApiResponse({status: 200,description: 'Rol obtenido exitosamente'})
     async findById(@Param('id') id: string): Promise<RoleOneResponseDto>{
         return this.roleService.findById(id);
     }
@@ -70,11 +53,7 @@ export class RoleController {
     @UseGuards(JwtGuard, AccessGuard)
     @RequireAccess('role:create')
     @ApiOperation({ summary: 'Crear un rol' })
-    @ApiResponse({ 
-        status: 200, 
-        description: 'Rol creado exitosamente',
-        type: String
-    })
+    @ApiResponse({status: 200,description: 'Rol creado exitosamente'})
     async createRole(@Body() role: RoleUpdateDto){
         return this.roleService.createRole(role);
     }

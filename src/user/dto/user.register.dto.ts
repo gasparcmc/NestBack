@@ -1,7 +1,14 @@
 // user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, MinLength, MaxLength, IsNumber, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, MaxLength, IsArray, ValidateNested, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
+export class RoleIdDto {
+  @ApiProperty({ description: 'ID del rol', example: 1 })
+  @IsInt()
+  @Min(1)
+  id: number;
+}
 
 export class UserRegisterDto {
     // El nombre de usuario
@@ -9,7 +16,6 @@ export class UserRegisterDto {
         description: 'El nombre de usuario',
         example: 'admin',
         required: true,
-
       })
       @IsString()
       @IsNotEmpty()
@@ -21,7 +27,6 @@ export class UserRegisterDto {
         description: 'El email',
         example: 'admin@gmail.com',
         required: true,
-
       })
       @IsString()
       @IsNotEmpty()
@@ -44,10 +49,13 @@ export class UserRegisterDto {
     // Los roles del usuario
     @ApiProperty({
       description: 'Los roles del usuario',
+      type: [RoleIdDto],
       example: [{id: 1}, {id: 2}],
     })
     @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => RoleIdDto)
     @IsNotEmpty()
-    roles: {id: number}[];
-  }
+    roles: RoleIdDto[];
+}
   
