@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.use(cors({
-    origin: 'http://localhost:3001', // frontend Next.js
+    origin: process.env.FRONTEND_URL, // frontend Next.js
     credentials: true, // ⬅️ necesario para permitir cookies
   }));
 
