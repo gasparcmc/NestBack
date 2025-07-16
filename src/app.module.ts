@@ -6,6 +6,7 @@ import { BusinessModule } from './business/business.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from './email/email.module';
 
 const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
@@ -25,7 +26,7 @@ const config = {
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig),AuthModule, UserModule, RoleModule, BusinessModule,ConfigModule.forRoot(config),],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig),AuthModule, UserModule, RoleModule, BusinessModule,ConfigModule.forRoot(config), EmailModule,],
   controllers: [],
   providers: [],
 })
