@@ -12,8 +12,6 @@ async function bootstrap() {
   // Validación de los datos de entrada
   app.useGlobalPipes(new ValidationPipe());
 
-
-  console.log(process.env.FRONTEND_URL);
   app.use(cors({
     origin: process.env.FRONTEND_URL, // frontend Next.js
     credentials: true, // ⬅️ necesario para permitir cookies
@@ -38,7 +36,7 @@ async function bootstrap() {
 
   // Creación del documento de Swagger
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // http://localhost:3000/api
+  SwaggerModule.setup('api', app, document); 
   }
 
   // Inicio del servidor

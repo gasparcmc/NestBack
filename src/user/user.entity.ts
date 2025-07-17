@@ -17,6 +17,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  tokenResetPassword: string;
+
+  @Column({ nullable: true })
+  tokenResetPasswordExpires: Date;
+
   @Column()
   createdAt: Date;
 

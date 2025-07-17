@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MinLength, MaxLength, IsNumber, IsArray, ValidateNested, IsInt } from "class-validator";
+import { IsNotEmpty, IsString, MinLength, MaxLength, IsArray, ValidateNested, IsInt } from "class-validator";
 import { Type } from "class-transformer";
 
 export class UpdateAccessDto {

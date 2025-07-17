@@ -33,7 +33,7 @@ export class EmailService {
         text: options.text,
         attachments: options.attachments,
       };
-
+      
       await this.mailerService.sendMail(mailOptions);
     } catch (error) {
       throw new Error(`Error al enviar email: ${error.message}`);

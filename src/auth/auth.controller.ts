@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Res, HttpStatus, Get } from '@nestjs/common';
+import { Body, Controller, Post, Res, HttpStatus, Get, Param, Query } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto.login';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';  
+import { ResetPasswordDto } from './dto/auth.dto.resetPassword';
 
 @Controller('auth')
 export class AuthController {
@@ -11,9 +12,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Iniciar sesión' })
   @ApiBody({ type: LoginDto })
-  async create(@Body() loginDto: LoginDto, @Res() res: Response) {
-    console.log("controller:", loginDto);
-    
+  async create(@Body() loginDto: LoginDto, @Res() res: Response) {  
     try {
       // Validamos usuario y contraseña, si todo sale bien, se genera el token y se procede a configurar la cookie
       const result = await this.authService.login(loginDto);
@@ -87,5 +86,17 @@ export class AuthController {
       success: true,
       message: 'Logout exitoso'
     });
+  }
+
+  @Post('/resetPassword')
+  @ApiOperation({ summary: 'Reiniciar contraseña' })
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.resetPassword(resetPasswordDto);
+  }
+
+  @Get('/forgotPassword')
+  @ApiOperation({ summary: 'Olvidé mi contraseña' })
+  async forgotPassword(@Query('email') email: string) {
+      return this.authService.forgotPassword(email);
   }
 }
