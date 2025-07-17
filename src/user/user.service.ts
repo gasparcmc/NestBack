@@ -171,7 +171,7 @@ export class UserService {
         throw new NotFoundException('Menu not found');
       }
 
-      console.log("result", result);
+      //console.log("result", result);
 
       // Crear el menu basico de la aplicacion
       const items = [

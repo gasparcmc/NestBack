@@ -12,6 +12,8 @@ async function bootstrap() {
   // Validación de los datos de entrada
   app.useGlobalPipes(new ValidationPipe());
 
+
+  console.log(process.env.FRONTEND_URL);
   app.use(cors({
     origin: process.env.FRONTEND_URL, // frontend Next.js
     credentials: true, // ⬅️ necesario para permitir cookies
@@ -40,6 +42,6 @@ async function bootstrap() {
   }
 
   // Inicio del servidor
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

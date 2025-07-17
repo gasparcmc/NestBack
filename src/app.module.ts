@@ -20,7 +20,7 @@ const config = {
 const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
   host: process.env.HOSTBD,
-  port: parseInt(process.env.PORT || '5432'),
+  port: parseInt(process.env.PORTBD || '5432'),
   username: process.env.USERNAMEBD,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
