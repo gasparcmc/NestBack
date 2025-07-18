@@ -1,11 +1,18 @@
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsEmail } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ResetPasswordDto {
+export class RegisterDto {
     @IsNotEmpty()
     @IsString()
-    @ApiProperty({ description: 'Token', example: '12345678' })
-    token: string;
+    @MinLength(3)
+    @MaxLength(20)
+    @ApiProperty({ description: 'Nombre de usuario', example: 'juan' })
+    username: string;
+
+    @IsNotEmpty()
+    @IsEmail()
+    @ApiProperty({ description: 'Email', example: 'juan@gmail.com' })
+    email: string;
 
     @IsNotEmpty()
     @IsString()

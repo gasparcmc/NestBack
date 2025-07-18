@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto.login';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';  
 import { ResetPasswordDto } from './dto/auth.dto.resetPassword';
+import { RegisterDto } from './dto/auth.dto.register';
 
 @Controller('auth')
 export class AuthController {
@@ -88,15 +89,27 @@ export class AuthController {
     });
   }
 
-  @Post('/resetPassword')
+  @Post('resetPassword')
   @ApiOperation({ summary: 'Reiniciar contraseña' })
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
 
-  @Get('/forgotPassword')
+  @Get('forgotPassword')
   @ApiOperation({ summary: 'Olvidé mi contraseña' })
   async forgotPassword(@Query('email') email: string) {
       return this.authService.forgotPassword(email);
+  }
+
+  @Post('register')
+  @ApiOperation({ summary: 'Registrar usuario' })
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
+  }
+
+  @Get('register')
+  @ApiOperation({ summary: 'Confirmar registro' })
+  async registerConfirm(@Query('token') token: string) {
+    return this.authService.registerConfirm(token);
   }
 }

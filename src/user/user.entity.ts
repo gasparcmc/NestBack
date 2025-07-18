@@ -17,17 +17,29 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  tokenResetPassword: string;
+  @Column({ type: 'boolean', nullable: true })
+  isActive: boolean | null;
 
-  @Column({ nullable: true })
-  tokenResetPasswordExpires: Date;
+  //tokens
+  @Column({ type: 'text', nullable: true })
+  tokenResetPassword: string | null;
 
-  @Column()
+  @Column({ type: 'timestamp', nullable: true })
+  tokenResetPasswordExpires: Date | null;
+
+  @Column({ type: 'text', nullable: true })
+  tokenRegister: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  tokenRegisterExpires: Date | null;
+
+  //columnas default
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-
-  @Column()
+  @Column({ type: 'timestamp' })
   updatedAt: Date;
+
+  //relaciones
 
   // Muchas empresas
   @ManyToMany(() => Business, business => business.users)

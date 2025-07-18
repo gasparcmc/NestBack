@@ -7,6 +7,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import * as jwt from 'jsonwebtoken';
 import { EmailService } from '../email/email.service';
+import { RegisterDto } from './dto/auth.dto.register';
 
 import { ResetPasswordDto } from './dto/auth.dto.resetPassword';
 
@@ -124,7 +125,7 @@ export class AuthService {
     }
 
     const minutos = parseInt(process.env.TOKEN_EXPIRATION_PASSWORD || '15');//si no existe, se usa 15 minutos
-    if (user.tokenResetPasswordExpires < new Date(Date.now() + 1000 * 60 * minutos)) {
+    if (user.tokenResetPasswordExpires && user.tokenResetPasswordExpires < new Date(Date.now() + 1000 * 60 * minutos)) {
       throw new UnauthorizedException('Token expirado');
     }
 
@@ -147,5 +148,82 @@ export class AuthService {
     };
   }
 
+  async register(registerDto: RegisterDto) {
+    const { username, email, password } = registerDto;
+    const user = await this.userRepository.findOne({ where: [
+       { email:email},
+       { username:username } 
+      ]
+      });
 
+    if (user && user.username==username) {
+      throw new UnauthorizedException('Usuario ya existe');
+    }
+
+    if (user && user.email==email) {
+      throw new UnauthorizedException('Email ya existe');
+    }
+
+    const passwordHash = await argon2.hash(password);
+    const newUser = new User();
+    newUser.username = username;
+    newUser.email = email;
+    newUser.password = passwordHash;
+    newUser.isActive = false;
+    newUser.createdAt = new Date();
+    newUser.updatedAt = new Date();
+
+    // Generar token de registro
+    const token = await jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET);
+    newUser.tokenRegister = token;
+    const minutos = parseInt(process.env.TOKEN_EXPIRATION_REGISTER || '30');//si no existe, se usa 15 minutos
+    const fecha = new Date(Date.now() + 1000 * 60 * minutos)
+    console.log("fecha", fecha);
+    newUser.tokenRegisterExpires = fecha; // 24 horas
+    await this.userRepository.save(newUser);
+
+    // Enviar email de registro
+    await this.emailService.sendEmail({
+      to: email,
+      subject: 'Registro de usuario',
+      template: 'account-confirmation',
+      context: {
+        username: username, 
+        token: token,
+        appUrl: process.env.FRONTEND_URL,
+        appName: process.env.APP_NAME,
+        confirmationUrl: `${process.env.FRONTEND_URL}/auth/register?token=${token}`
+      }
+    });
+
+    return {
+      success: true,
+      message: 'Usuario registrado exitosamente'
+    };
+  }
+
+
+  async registerConfirm(token: string) {
+
+    //console.log("token", token);
+    const user = await this.userRepository.findOne({ where: { tokenRegister: token } });
+    console.log("user", user);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    if (user.tokenRegisterExpires && user.tokenRegisterExpires < new Date()) {
+      throw new UnauthorizedException('Token de registro expirado.');
+    }
+
+    user.isActive = true;
+    user.tokenRegister = null;
+    user.tokenRegisterExpires = null;
+
+    await this.userRepository.save(user);
+    return {
+      success: true,
+      message: 'Usuario confirmado exitosamente'
+    };
+  }
 }
