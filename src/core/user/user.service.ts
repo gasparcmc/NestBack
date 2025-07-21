@@ -6,7 +6,7 @@ import { UserRegisterDto } from './dto/user.register.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { UserOneResponseDto } from './dto/user.one.response.dto';
 import { NotFoundException, BadRequestException, Injectable, ExecutionContext } from '@nestjs/common';
-import { Role } from 'src/role/role.entity';
+import { Role } from '../role/role.entity';
 import * as argon2 from 'argon2';
 import { DataSource } from 'typeorm';
 

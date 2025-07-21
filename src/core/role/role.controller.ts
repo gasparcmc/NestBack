@@ -7,7 +7,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 import { RoleOneResponseDto } from './dto/role.one.response.dto';
 import { AccessAllResponseDto } from './access/access.all.response.dto';
-import { AccessGuard } from 'src/role/access/access.guard';
+import { AccessGuard } from '../role/access/access.guard';
 import { RoleUpdateDto } from './dto/role.update.dto';
 
 

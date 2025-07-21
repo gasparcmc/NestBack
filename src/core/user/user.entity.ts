@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
-import { Business } from '../business/business.entity';
+
 import { Role } from '../role/role.entity';
 
 
@@ -40,11 +40,6 @@ export class User {
   updatedAt: Date;
 
   //relaciones
-
-  // Muchas empresas
-  @ManyToMany(() => Business, business => business.users)
-  @JoinTable()
-  businesses: Business[];
 
   // Muchos roles
   @ManyToMany(() => Role, role => role.users)

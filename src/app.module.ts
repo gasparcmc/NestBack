@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { RoleModule } from './role/role.module';
-import { BusinessModule } from './business/business.module';
+import { UserModule } from './core/user/user.module';
+import { RoleModule } from './core/role/role.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { EmailModule } from './email/email.module';
+import { EmailModule } from './core/email/email.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -31,7 +30,7 @@ const typeOrmConfig: DataSourceOptions = {
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig),AuthModule, UserModule, RoleModule, BusinessModule,ConfigModule.forRoot(config), EmailModule,],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig),AuthModule, UserModule, RoleModule,ConfigModule.forRoot(config), EmailModule,],
   controllers: [],
   providers: [],
 })

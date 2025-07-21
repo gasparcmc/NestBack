@@ -4,7 +4,7 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/user/user.entity';
+import { User } from '../user/user.entity';
 import { RoleFindAllResponseDto } from './dto/role.find-all.response.dto';
 import { RoleOneResponseDto , AccessResponseDto} from './dto/role.one.response.dto';
 import { AccessAllResponseDto } from './access/access.all.response.dto';

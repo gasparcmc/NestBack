@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/auth.dto.login';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../user/user.entity';
+import { User } from '../core/user/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import * as jwt from 'jsonwebtoken';
-import { EmailService } from '../email/email.service';
+import { EmailService } from '../core/email/email.service';
 import { RegisterDto } from './dto/auth.dto.register';
 
 import { ResetPasswordDto } from './dto/auth.dto.resetPassword';
@@ -23,6 +23,10 @@ export class AuthService {
 
     const { username, password } = loginDto;
 
+
+    const passwordHash = await argon2.hash(password);
+    console.log("passwordHash: ", passwordHash);
+    console.log("password: ", password);
     // Buscar el usuario en la base de datos
     const user = await this.userRepository.findOne({ where: { username } });
 
