@@ -8,8 +8,7 @@ import { RequireAccess } from '../role/access/access.decorator';
 import { UserRegisterDto } from './dto/user.register.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { UserResponseDto } from './dto/user.response.dto';
-import { UserOneResponseDto } from './dto/user.one.response.dto';
+
 
 
 @ApiTags('User')
