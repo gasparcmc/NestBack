@@ -75,7 +75,7 @@ export class RoleService {
 
             const newRole = await this.roleRepository.save(role);
 
-            return "Role created successfully";
+            return {success: true, message: "Role created successfully"};
 
         } catch (error) {
             console.log("error", error);
@@ -110,7 +110,7 @@ export class RoleService {
 
             await this.roleRepository.save(roleExists);
 
-            return "Role updated successfully";
+            return {success: true, message: "Role updated successfully"};
         } catch (error) {
             console.log("error", error);
             throw new BadRequestException('Error updating role');
@@ -134,7 +134,7 @@ export class RoleService {
 
             // Eliminar el rol
             await this.roleRepository.delete(id);
-            return "Role deleted successfully";
+            return {success: true, message: "Role deleted successfully"};
         } catch (error) {
             console.log("error", error);
             throw new BadRequestException('Error deleting role');

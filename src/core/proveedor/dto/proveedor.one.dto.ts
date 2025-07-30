@@ -30,4 +30,7 @@ export class ProveedorOneDto {
 
     @ApiProperty({ description: 'CUIT del proveedor' })
     cuit: string;
+
+    @ApiProperty({ description: 'Imagen de portada del proveedor' })
+    portada: string;
 }

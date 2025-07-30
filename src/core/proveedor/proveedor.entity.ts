@@ -31,7 +31,10 @@ export class Proveedor {
     estado: string;
 
     @Column({type: 'varchar', length: 20, nullable: true})
-    cuit: string | null; 
-    
+    cuit: string | null;
+
+    // Imagen de portada del proveedor
+    @Column({type: 'varchar', length: 255, nullable: true})
+    portada: string | null;
     
 }

@@ -5,9 +5,12 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
 
   // Validación de los datos de entrada
   app.useGlobalPipes(new ValidationPipe());
@@ -19,11 +22,6 @@ async function bootstrap() {
 
   // Configuración de cookies
   app.use(cookieParser());
-  // Configuración de CORS
-  //app.enableCors({
-  //  origin: 'http://localhost:3000', // frontend Next.js
-  //  credentials: true, // ⬅️ necesario para permitir cookies
-  //});
 
   if (process.env.NODE_ENV === 'test') {
   // Configuración de Swagger
@@ -38,6 +36,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document); 
   }
+
+    // Esto expone la carpeta 'uploads' en la raíz del proyecto
+    
+    app.useStaticAssets(join(__dirname, '..', '..', '..', 'uploads'), {
+      prefix: '/uploads/',
+    });
+
 
   // Inicio del servidor
   await app.listen(process.env.PORT || 3000);

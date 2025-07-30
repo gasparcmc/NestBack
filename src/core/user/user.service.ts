@@ -95,7 +95,7 @@ export class UserService {
 
       const userNew = await this.userRepository.save(UserFormat);
 
-      return "User created successfully";
+      return {success: true, message: "User created successfully"};
 
     } catch (error) {
       console.log("error", error);
@@ -125,7 +125,7 @@ export class UserService {
 
 
 
-      return "User updated successfully";
+      return {success: true, message: "User updated successfully"};
     } catch (error) {
       console.log("error", error);
       throw new BadRequestException('Error updating user');
@@ -142,7 +142,7 @@ export class UserService {
       }
 
       await this.userRepository.delete(userExists.id);
-      return "User deleted successfully";
+      return {success: true, message: "User deleted successfully"};
 
     } catch (error) {
       console.log("error", error);

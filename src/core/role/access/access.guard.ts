@@ -20,8 +20,8 @@ export class AccessGuard implements CanActivate {
               const request = context.switchToHttp().getRequest();
               console.log("Requestuser:", request.user);
               const user = request.user;
-
-        if(process.env.NODE_ENV === 'test' && user.id === '1'){
+        console.log("user", user);
+        if(process.env.NODE_ENV === 'test' && user.userId === 1){
             return true;
         }
 
